@@ -44,6 +44,7 @@ var tjConfig = {
 // instantiate our TJBot!
 var tj = new TJBot(hardware, tjConfig, credentials);
 tj._setupLEDStrip();
+console.log("TJBot configured with " + tj.configuration.shine.led_strip.num_leds + " LEDs");
 
 // create the twitter service
 var twitter = new Twitter({

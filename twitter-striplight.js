@@ -24,12 +24,10 @@ var credentials = config.credentials;
 // obtain user-specific config
 var OWNER_NAME = config.owner_name;
 var SENTIMENT_KEYWORD = config.sentiment_keyword;
-var SPEAK_INTRO = config.speak_intro;
-var SPEAK_ON_SENTIMENT_CHANGE = config.speak_on_sentiment_change;
 var SENTIMENT_ANALYSIS_FREQUENCY_MSEC = config.sentiment_analysis_frequency_sec * 1000;
 
 // these are the hardware capabilities that TJ needs for this recipe
-var hardware = ['led-strip', 'speaker'];
+var hardware = ['led-strip'];
 
 // turn on debug logging to the console
 var tjConfig = {
@@ -38,7 +36,7 @@ var tjConfig = {
     },
     shine: {
         led_strip: {
-            num_leds = 1
+            num_leds: 1
         }
     }
 };
@@ -64,76 +62,17 @@ for (var i = 0; i < 10; i++) {
 }
 tj.shineStripWithRGBColor('off');
 
-// speak a greeting
-if (SPEAK_INTRO) {
-    var now = new Date();
-    var greeting = greetingForHour(now.getHours(), OWNER_NAME);
-
-    tj.speak(greeting).then(function() {
-        return tj.speak("I am monitoring Twitter for sentiment related to " + SENTIMENT_KEYWORD + ".");
-    }).then(function() {
-        return tj.speak("When I see that people are happy, I shine yellow!");
-    }).then(function() {
-        tj.shineStripWithRGBColor('yellow');
-        return tj.speak("When they are sad, I shine blue.");
-    }).then(function() {
-        tj.shineStripWithRGBColor('blue');
-        return tj.speak("I also shine red when they are angry");
-    }).then(function() {
-        tj.shineStripWithRGBColor('red');
-        return tj.speak("purple when they are afraid");
-    }).then(function() {
-        tj.shineStripWithRGBColor('purple');
-        return tj.speak("and green when they express disgust.");
-    }).then(function() {
-        tj.shineStripWithRGBColor('green');
-        return tj.speak("Here we go!");
-    }).then(function() {
-        tj.shineStripWithRGBColor('off');
-        return tj.speak("It may take some time for me to collect enough tweets to analyze.");
-    }).then(function() {
-        monitorTwitter();
-    });
-} else {
-    // don't speak the intro, just go straight to the monitoring
-    monitorTwitter();
-}
+// go do the monitoring
+monitorTwitter();
 
 
 // ---
-
-function greetingForHour(hour, name) {
-    if (hour >= 5 && hour < 8) {
-        // wee-hours
-        return "Yawn. " + name + ", why are we up so early?";
-    } else if (hour >= 8 && hour < 12) {
-        // morning
-        return "Good morning " + name;
-    } else if (hour >= 12 && hour < 17) {
-        // afternoon
-        return "Good afternoon " + name;
-    } else if (hour >= 17 && hour < 22) {
-        // evening
-        return "Good evening " + name;
-    } else if (hour >= 22 && hour < 24) {
-        // late evening
-        return "Good evening " + name + ", it looks like we're up late!";
-    } else if (hour >= 0 && hour < 5) {
-        // night
-        return name + ", isn't it time for bed?";
-    } else {
-        return "Hello, " + name;
-    }
-}
 
 var TWEETS = [];
 var MAX_TWEETS = 100;
 var CONFIDENCE_THRESHOLD = 0.5;
 
 function monitorTwitter() {
-    // start the pulse to show we are thinking
-    tj.pulse('white', 1.5, 2.0);
-
     // monitor twitter
     twitter.stream('statuses/filter', {
         track: SENTIMENT_KEYWORD
@@ -198,48 +137,31 @@ function shineFromTweetSentiment() {
     }
 }
 
-var PREVIOUS_EMOTION = undefined;
-
 function shineForEmotion(emotion) {
     console.log("Current emotion around " + SENTIMENT_KEYWORD + " is " + emotion);
-
-    var msg = "";
 
     switch (emotion) {
         case 'anger':
             tj.shineStripWithRGBColor('red');
-            msg = "people are feeling angry about " + SENTIMENT_KEYWORD + " right now";
         break;
 
         case 'joy':
             tj.shineStripWithRGBColor('yellow');
-            msg = "people are feeling happy about " + SENTIMENT_KEYWORD + " right now";
         break;
 
         case 'fear':
             tj.shineStripWithRGBColor('magenta');
-            msg = "people are feeling afraid about " + SENTIMENT_KEYWORD + " right now";
         break;
 
         case 'disgust':
             tj.shineStripWithRGBColor('green');
-            msg = "people are feeling disgusted about " + SENTIMENT_KEYWORD + " right now";
         break;
 
         case 'sadness':
             tj.shineStripWithRGBColor('blue');
-            msg = "people are feeling sad about " + SENTIMENT_KEYWORD + " right now";
         break;
 
         default:
         break;
     }
-
-    if (PREVIOUS_EMOTION == undefined || PREVIOUS_EMOTION != emotion) {
-        if (SPEAK_ON_SENTIMENT_CHANGE) {
-            tj.speak("Hey " + OWNER_NAME + ", " + msg);
-        }
-    }
-
-    PREVIOUS_EMOTION = emotion;
 }

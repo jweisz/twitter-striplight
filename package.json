@@ -1,8 +1,8 @@
 {
-  "name": "twitter-wave",
+  "name": "twitter-striplight",
   "version": "1.0.0",
-  "description": "Enhanced Twitter recipe for TJBot",
-  "main": "twitter_wave.js",
+  "description": "Twitter monitoring recipe for TJBot using a strip light",
+  "main": "twitter-striplight.js",
   "dependencies": {
     "tjbot": "^1.2.0",
     "twitter": "^1.7.0"
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jweisz/twitter-wave.git"
+    "url": "git+https://github.com/jweisz/twitter-striplight.git"
   },
   "keywords": [
     "TJBot"
@@ -21,7 +21,7 @@
   "author": "Justin Weisz <jweisz@us.ibm.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/jweisz/twitter-wave/issues"
+    "url": "https://github.com/jweisz/twitter-striplight/issues"
   },
-  "homepage": "https://github.com/jweisz/twitter-wave#readme"
+  "homepage": "https://github.com/jweisz/twitter-striplight#readme"
 }

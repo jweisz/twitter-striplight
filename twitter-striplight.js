@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-var TJBot = require('/home/pi/Desktop/tjbot-striplight/tjbot-striplight');
+var TJBot = require('/home/pi/Desktop/tjbot-striplight');
 var config = require('./config');
 var Twitter = require('twitter');
 

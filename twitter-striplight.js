@@ -36,7 +36,7 @@ var tjConfig = {
     },
     shine: {
         led_strip: {
-            num_leds: 1
+            num_leds: 60
         }
     }
 };
